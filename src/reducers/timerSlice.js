@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const defaultSessionLength = 25;
-export const defaultBreakLength = 5
+export const defaultBreakLength = 5;
 
 const timerSlice = createSlice({
   name: "timer",

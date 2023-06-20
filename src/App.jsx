@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import TimeLabel from './components/TimeLabel';
 import Timer from './components/Timer';
 import StartButton from './components/StartButton';
@@ -12,6 +12,7 @@ import { defaultBreakLength, defaultSessionLength } from './reducers/timerSlice'
 function App() {
 
   const dispatch = useDispatch();
+  const audioRef = useRef();
 
   const breakLength = useSelector(state => state.timer.breakLength);
   const sessionLength = useSelector(state => state.timer.sessionLength);
@@ -19,22 +20,30 @@ function App() {
   const runningState = useSelector(state => state.timer.runningState);
   const timeRemaining = useSelector(state => state.timer.timerDisplay);
 
-
   useEffect(() => {
     let intervalID;
     if (runningState) {
       const startTime = Date.now();
       intervalID = setInterval(() => {
         const newTimeRemaining = Math.floor(timeRemaining / 1000) - Math.floor(Date.now() / 1000) + Math.floor(startTime / 1000);
+
         if (newTimeRemaining <= -1) {
-          //TODO: play audio 'beep'
-          dispatch(updateTimerDisplay({ value: timerLabel === 'Break' ? breakLength * 60 * 1000 : sessionLength * 60 * 1000 }));
-          dispatch(updateTimerLabel({ value: timerLabel === 'Break' ? 'Session' : 'Break' }));
-        } else if (newTimeRemaining < 0) {
+          if (timerLabel === 'Break') {
+            dispatch(updateTimerLabel({ value: 'Session' }));
+            dispatch(updateTimerDisplay({ value: sessionLength * 60 * 1000 }));
+          } else{
+            dispatch(updateTimerLabel({ value: 'Break' }));
+            dispatch(updateTimerDisplay({ value: breakLength * 60 * 1000 }));
+          }
+          // dispatch(updateTimerDisplay({ value: timerLabel === 'Break' ? breakLength * 60 * 1000 : sessionLength * 60 * 1000 }));
+          // dispatch(updateTimerLabel({ value: timerLabel === 'Break' ? 'Session' : 'Break' }));
+        } else if (newTimeRemaining <= 0) {
+          audioRef.current.play()
           dispatch(updateTimerDisplay({ value: 0 }));
         } else {
           dispatch(updateTimerDisplay({ value: newTimeRemaining * 1000 }));
         }
+
       }, 100);
     }
     return () => { clearInterval(intervalID); };
@@ -74,6 +83,8 @@ function App() {
   };
 
   const handleResetButtonClick = () => {
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
     dispatch(updateTimerDisplay({ value: defaultSessionLength * 60 * 1000 }));
     dispatch(updateTimerLabel({ value: 'Session' }));
     dispatch(updateSessionLength({ value: defaultSessionLength }));
@@ -97,6 +108,7 @@ function App() {
       <div>
         <StartButton handler={handleStartButtonClick}></StartButton>
       </div>
+      <audio src="./src/assets/alarm-clock-short-6402.mp3" ref={audioRef} id='beep'></audio>
     </section>
   );
 }
