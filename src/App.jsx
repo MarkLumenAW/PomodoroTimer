@@ -4,6 +4,7 @@ import Timer from './components/Timer';
 import StartButton from './components/StartButton';
 import ResetButton from './components/ResetButton';
 import TimeSetter from './components/TimeSetter';
+import Footer from './components/Footer';
 import './App.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateTimerDisplay, updateTimerLabel, updateSessionLength, updateBreakLength, updateRunningState } from './reducers/timerSlice';
@@ -35,8 +36,6 @@ function App() {
             dispatch(updateTimerLabel({ value: 'Break' }));
             dispatch(updateTimerDisplay({ value: breakLength * 60 * 1000 }));
           }
-          // dispatch(updateTimerDisplay({ value: timerLabel === 'Break' ? breakLength * 60 * 1000 : sessionLength * 60 * 1000 }));
-          // dispatch(updateTimerLabel({ value: timerLabel === 'Break' ? 'Session' : 'Break' }));
         } else if (newTimeRemaining <= 0) {
           audioRef.current.play()
           dispatch(updateTimerDisplay({ value: 0 }));
@@ -59,6 +58,8 @@ function App() {
       console.log(`running:` + runningState);
       return;
     }
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
     dispatch(updateRunningState({ value: false }));
     console.log(`running:` + runningState);
   };
@@ -108,7 +109,8 @@ function App() {
       <div>
         <StartButton handler={handleStartButtonClick}></StartButton>
       </div>
-      <audio src="./src/assets/alarm-clock-short-6402.mp3" ref={audioRef} id='beep'></audio>
+      <Footer/>
+      <audio src="audio/alarm-clock-short-6402.mp3" ref={audioRef} id='beep'></audio>
     </section>
   );
 }
