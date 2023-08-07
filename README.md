@@ -63,7 +63,7 @@ Contributions to this project are always welcome. Here's how you can help enhanc
 
 Start by forking the project repository, then clone your fork using:
 ```bash
-git clone https://github.com/example-username/example-project.git
+git clone https://github.com/MarkLumenAW/project-name.git
 ```
 
 ### Create a New Branch
