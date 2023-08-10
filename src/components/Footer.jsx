@@ -8,7 +8,7 @@ export default function Footer(props) {
         <a href="https://github.com/MarkLumenAW/FCC_Frontend_Project_5_PomodoroTimer" target="_blank" rel="noopener noreferrer">
           <Icon icon="mdi:github" color="fff" width="1rem" />
         </a>
-        <a href="https://www.linkedin.com/in/pengcheng-wang-0412b0151/" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.linkedin.com/in/alexwang-au/" target="_blank" rel="noopener noreferrer">
           <Icon icon="mdi:linkedin" color="fff" width="1rem" />
         </a>
       </div>
